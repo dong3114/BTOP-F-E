@@ -1,13 +1,16 @@
-import logo from './logo.svg';
 import './App.css';
-import React from 'react';
-import MicStreamer from './components/MicStreamer';
+import { BrowserRouter } from 'react-router-dom'
+import MainLayout from './pages/mainlayout';
+import AppRoutes from './utils/Routes';
 
 export default function App() {
   return (
-    <main className="container">
-      <h1>마이크 테스트</h1>
-      <MicStreamer />
-    </main>
+    <div>
+      <BrowserRouter>
+        <MainLayout>
+          <AppRoutes />
+        </MainLayout>
+      </BrowserRouter>
+    </div>    
   );
 }
