@@ -15,96 +15,7 @@ body {
   min-height: 100vh;
 }
 
-/* 헤더 영역 스타일. */
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1.5rem 3rem;
-  background-color: #ffffff;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  border-bottom: 1px solid #e9ecef;
-}
 
-/* 헤더 왼쪽 부분 컨테이너. */
-.header-left {
-  display: flex;
-  align-items: center;
-  gap: 2rem;
-}
-
-/* 헤더 제목 컨테이너 스타일. */
-.header-title-container {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-/* 헤더 제목 스타일. */
-.header-title {
-  font-size: 2rem;
-  font-weight: 800;
-  color: #00a400;
-  margin: 0;
-}
-
-/* 아이콘 스타일. */
-.title-icon {
-  font-size: 2rem;
-  color: #00a400;
-}
-
-/* 네비게이션 메뉴 스타일. */
-.nav {
-  display: flex;
-  gap: 1rem;
-}
-
-/* 네비게이션 링크 스타일. */
-.nav-link {
-  text-decoration: none;
-  color: #000000;
-  font-weight: bold;
-  padding: 0.5rem 1rem;
-  transition: color 0.2s;
-}
-
-/* 호버 시 색상 변경. */
-.nav-link:hover {
-  color: #00a400;
-}
-
-/* 로그인/회원가입 버튼 컨테이너 스타일. */
-.auth-buttons {
-  display: flex;
-  gap: 1rem;
-}
-
-/* 로그인/회원가입 버튼 스타일. */
-.auth-button {
-  background-color: #00a400;
-  color: white;
-  border: none;
-  padding: 0.75rem 1.5rem;
-  border-radius: 20px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background-color 0.2s, transform 0.2s;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.auth-button.login {
-  background-color: #34495e;
-}
-
-.auth-button.signup {
-  background-color: #00a400;
-}
-
-.auth-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
 
 /* 메인 콘텐츠 영역 스타일. */
 .outer {
@@ -533,3 +444,4 @@ body {
   cursor: not-allowed;
   opacity: 0.5;
 }
+
