@@ -38,7 +38,7 @@ export default function Header({ title }) {
     // 모달 닫기 핸들러
     const handleCloseModal = () => {
         setIsModalOpen(false);
-        // setIsLoggedIn(true);
+        // setIsLoggedIn(true); // 로그인 상태 업데이트시 사용가능
     };
 
     return (
@@ -48,17 +48,16 @@ export default function Header({ title }) {
                     <h3 className="header-title"><GiTigerHead className="title-icon" />{title}</h3>
                 </div>
                 <div className='nav'>
-                    <Link to="/" className="nav-link">자유 게시판</Link>
+                    {/* 자유게시판 링크를 /post로 수정 */}
+                    <Link to="/post" className="nav-link">자유 게시판</Link>
                     <Link to="/notice" className="nav-link">공지사항</Link>
                 </div>
             </div>
 
             <div className="auth-buttons">
                 {isLoggedIn ? (
-                    // 로그인 상태에 따른 버튼 표시
                     <button className="auth-button logout" onClick={handleLogout}>로그아웃</button>
                 ) : (
-                    // 로그아웃 상태에 따른 버튼 표시
                     <>
                         <button className="auth-button login" onClick={handleLoginClick}>로그인</button>
                         <button className="auth-button signup">회원가입</button>
