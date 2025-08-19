@@ -19,7 +19,7 @@ export const Auth = {
       });
   },
   Logout: () => {
-    useAuthStore.getState().Logout();
+    useAuthStore.getState().logout();
     return Promise.resolve(true);
   },
 }
