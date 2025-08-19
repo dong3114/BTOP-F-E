@@ -43,18 +43,27 @@
   gap: 1rem;
 }
 
-/* 네비게이션 링크 스타일. */
+/* 네비게이션 링크 스타일 수정 */
 .nav-link {
   text-decoration: none;
   color: #000000;
   font-weight: bold;
-  padding: 0.5rem 1rem;
-  transition: color 0.2s;
+  padding: 0.5rem 0; /* 상하 패딩을 유지하고 좌우 패딩을 0으로 설정 */
+  /* 밑줄 효과를 위해 border-bottom 속성 사용 */
+  border-bottom: 2px solid transparent; /* 기본 상태에서는 투명하게 */
+  transition: border-bottom 0.2s, color 0.2s; /* 부드러운 전환 효과 */
 }
 
-/* 호버 시 색상 변경. */
+/* 마우스 올렸을 때 밑줄 효과 */
 .nav-link:hover {
+  border-bottom: 2px solid #00a400;
   color: #00a400;
+}
+
+/* 현재 활성화된 페이지에 밑줄 효과 */
+.nav-link.active {
+  border-bottom: 2px solid #00a400;
+  color: #00a400; /* 활성화된 링크의 색상도 변경 */
 }
 
 /* 로그인/회원가입 버튼 컨테이너 스타일. */
