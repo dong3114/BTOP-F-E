@@ -1,4 +1,4 @@
-import { useAuthStore } from "../store/authStore";
+import { useAuthStore } from "../store/AuthStore";
 import BTOPAPI from "./BasicAPI"
 
 // 주스탠드 로그인 응답 객체

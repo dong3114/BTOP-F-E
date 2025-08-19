@@ -1,6 +1,6 @@
 import axios from "axios";
 import { toast } from 'react-toastify';
-import { useAuthStore } from "../store/authStore";
+import { useAuthStore } from "../store/AuthStore";
 
 const BTOPAPI = axios.create({
   baseURL: process.env.REACT_APP_API_URL,
