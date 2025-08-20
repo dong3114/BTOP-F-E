@@ -13,6 +13,7 @@ export const Auth = {
   Login: (payload) => {
     return BTOPAPI.post("/api/member/login", payload)
       .then(({ data }) => {
+        console.log("API_URL =", process.env.REACT_APP_API_URL);
         const login = loginResponse(data);
         useAuthStore.getState().setSession(login);  // 세션 저장 (persist가 sessionStorage에 기록)
         return data; // 호출측에서 그대로 사용
