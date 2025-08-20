@@ -1,7 +1,7 @@
 // src/components/MainHeader.jsx
 import { Link, NavLink } from "react-router-dom";
 import "./MainHeader.css";
-import { useAuthStore } from "../../utils/store/authStore";
+import { useAuthStore } from "../../utils/store/AuthStore";
 import { useNavigate } from 'react-router-dom'
 import { Auth } from "../../utils/api/MemberAPI";
 import { useState } from "react";
