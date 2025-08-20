@@ -1,9 +1,9 @@
-import MainHeader from "../../components/layouts/Header";
+import Header from "../../components/layouts/Header";
 
 export default function MainLayout({ children }) {
     return (
         <div className="layout-wrapper">
-            <MainHeader />
+            <Header />
             <main className="layout-main">{children}</main>
             {/**  푸터 */}
         </div>
