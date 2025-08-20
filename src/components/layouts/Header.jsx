@@ -1,3 +1,20 @@
+// src/components/MainHeader.jsx
+import { Link, NavLink } from "react-router-dom";
+import "./MainHeader.css";
+import { useAuthStore } from "../../utils/store/AuthStore";
+import { useNavigate } from 'react-router-dom'
+import { Auth } from "../../utils/api/MemberAPI";
+import { useState } from "react";
+import LoginModal from "../modals/login/LoginModal";
+
+export default function MainHeader() {
+  const [open, setOpen] = useState(false);
+  const userInfo = useAuthStore((s) => s.userInfo);
+  const isAuthed = !!userInfo?.token;               // 또는 !!userInfo?.memberNo
+  const navigate = useNavigate();
+
+  const handleLogout = () =>
+    Auth.Logout().then(() => navigate("/")).catch(() => {});
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { GiTigerHead } from "react-icons/gi";

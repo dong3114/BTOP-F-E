@@ -1,100 +1,142 @@
-// PATH: src/components/MicStreamer.jsx
-
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from "react";
+import MicButton from "./mic/MicButton";
+import "../app/styles/mic.css"; // 파동/UI 스타일
 
 export default function MicStreamer() {
-  const wsRef = useRef(null);
-  const recRef = useRef(null);
-  const [status, setStatus] = useState('idle');
-  const [logs, setLogs] = useState([]);
+  const [listening, setListening] = useState(false);
+  const [partial, setPartial]   = useState("");
+  const [finals, setFinals]     = useState([]);
 
-  const log = (m) => setLogs((prev) => [...prev, m].slice(-8));
+  // 리소스 핸들
+  const streamRef = useRef(null);
+  const recRef    = useRef(null);
+  const wsRef     = useRef(null);
 
-  const start = async () => {
-    // 1) 마이크 권한
-    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+  // MIME 협상 (크로스브라우저)
+  const pickMime = () => {
+    const cands = [
+      "audio/webm;codecs=opus",
+      "audio/webm",
+      "audio/ogg;codecs=opus",
+    ];
+    for (const m of cands) {
+      if (window.MediaRecorder && MediaRecorder.isTypeSupported(m)) return m;
+    }
+    return ""; // 브라우저 미지원
+  };
 
-    // 2) WebSocket 연결 (8090)
-    const wsUrl =
-      (window.location.protocol === 'https:' ? 'wss://' : 'ws://') +
-      'localhost:8090/ws/stt';
-    const ws = new WebSocket(wsUrl);
-    ws.binaryType = 'arraybuffer';
+  const connectWS = () => {
+    const host  = process.env.REACT_APP_WS_HOST || "localhost:8090";
+    const proto = window.location.protocol === "https:" ? "wss" : "ws";
+    const ws    = new WebSocket(`${proto}://${host}/ws/stt`);
+    ws.binaryType = "arraybuffer";
 
-    ws.onopen = () => {
-      log('WS connected');
-      setStatus('recording');
-    };
-    ws.onclose = () => {
-      log('WS closed');
-      setStatus('idle');
-    };
-    ws.onmessage = (e) => {
+    ws.onopen = () => console.log("[WS] open");
+    ws.onclose = (e) => console.log("[WS] close", e.code, e.reason);
+    ws.onerror = (e) => console.error("[WS] error", e);
+
+    ws.onmessage = (ev) => {
       try {
-        const msg = JSON.parse(e.data);
-        if (msg.partial) log(`Partial: ${msg.partial}`);
-        if (msg.final) log(`Final: ${msg.final}`);
+        const msg = JSON.parse(ev.data);
+        if (msg.partial) setPartial(String(msg.partial));
+        if (msg.final)   setFinals((prev) => [...prev, String(msg.final)]);
+        if (msg.error)   console.error("[WS] error:", msg.error);
       } catch {
-        log(String(e.data));
+        // 텍스트 이외(바이너리)는 무시
       }
     };
-    wsRef.current = ws;
 
-    // 3) MediaRecorder (Opus → 서버에서 FFmpeg로 PCM 변환)
-    const mime = 'audio/webm;codecs=opus';
-    if (!MediaRecorder.isTypeSupported(mime)) {
-      alert('브라우저가 audio/webm;codecs=opus를 지원하지 않습니다.');
+    wsRef.current = ws;
+  };
+
+  const start = async () => {
+    if (listening) return;
+    const mimeType = pickMime();
+    if (!mimeType) {
+      alert("이 브라우저는 MediaRecorder(웹m/opus)를 지원하지 않습니다. Chrome/Edge 최신 버전을 사용하세요.");
       return;
     }
-    const rec = new MediaRecorder(stream, {
-      mimeType: mime,
-      audioBitsPerSecond: 48000,
-    });
 
-    rec.ondataavailable = async (e) => {
-      if (!e.data.size || !wsRef.current || wsRef.current.readyState !== 1)
-        return;
-      const buf = await e.data.arrayBuffer();
-      wsRef.current.send(buf); // 서버로 바이너리 전송
-    };
+    try {
+      // 1) 마이크 권한/스트림
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      streamRef.current = stream;
 
-    rec.start(250); // 250ms마다 청크 전송
-    recRef.current = rec;
+      // 2) WS 연결
+      connectWS();
+
+      // 3) 녹음기 생성 및 청크 전송
+      const rec = new MediaRecorder(stream, { mimeType });
+      rec.ondataavailable = async (e) => {
+        if (!wsRef.current || wsRef.current.readyState !== WebSocket.OPEN) return;
+        // Blob -> ArrayBuffer -> 전송
+        const buf = await e.data.arrayBuffer();
+        wsRef.current.send(buf);
+      };
+      rec.onstart = () => console.log("[REC] start", mimeType);
+      rec.onstop  = () => console.log("[REC] stop");
+
+      // 250ms 타임슬라이스로 청크 전송
+      rec.start(250);
+      recRef.current = rec;
+
+      // UI 상태
+      setPartial("");
+      setListening(true);
+    } catch (err) {
+      console.error("마이크 시작 실패:", err);
+      setListening(false);
+    }
   };
 
   const stop = () => {
-    if (recRef.current && recRef.current.state !== 'inactive') recRef.current.stop();
-    if (wsRef.current && wsRef.current.readyState === 1) {
-      wsRef.current.send('stop');
-      wsRef.current.close();
+    if (!listening) return;
+
+    // 서버에 최종화 신호
+    if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
+      wsRef.current.send("stop");
     }
-    setStatus('idle');
+
+    // 녹음 중지
+    if (recRef.current && recRef.current.state !== "inactive") recRef.current.stop();
+    if (streamRef.current) {
+      streamRef.current.getTracks().forEach((t) => t.stop());
+      streamRef.current = null;
+    }
+
+    // WS 닫기(약간 대기 후)
+    if (wsRef.current) {
+      const ws = wsRef.current;
+      wsRef.current = null;
+      setTimeout(() => { try { ws.close(); } catch {} }, 300);
+    }
+
+    setListening(false);
   };
 
-  useEffect(() => () => stop(), []); // 언마운트 시 정리
+  const onToggle = () => (listening ? stop() : start());
+
+  // 언마운트 정리
+  useEffect(() => () => stop(), []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
-    <div style={{ display: 'grid', gap: 8 }}>
-      <div>
-        <button onClick={start} disabled={status === 'recording'}>
-          🎙️ Start
-        </button>
-        <button onClick={stop} disabled={status !== 'recording'}>
-          ⏹ Stop
-        </button>
-        <span style={{ marginLeft: 8 }}>status: {status}</span>
-      </div>
-      <div
-        style={{
-          whiteSpace: 'pre-wrap',
-          fontFamily: 'monospace',
-          background: '#f5f5f5',
-          padding: 8,
-          borderRadius: 6,
-        }}
-      >
-        {logs.join('\n')}
-      </div>
+  <div className="mic-page"> {/* 가운데 정렬 레이아웃 */}
+    <MicButton listening={listening} onToggle={onToggle} />
+    <div className="mic-status">
+      {listening ? "듣는 중..." : "대기 중 (버튼을 눌러 시작)"}
     </div>
-  );
+    <div className="transcript">
+      <div><strong> </strong> {partial}</div>
+      {finals.length > 0 && (
+        <div style={{ marginTop: 8 }}>
+          <strong>Final:</strong>
+          {finals.map((t, i) => (
+            <div key={i} className="final-item">• {t}</div>
+          ))}
+        </div>
+      )}
+    </div>
+  </div>
+);
+
 }
