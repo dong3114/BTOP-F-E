@@ -27,17 +27,6 @@ export default function Header({ title }) {
         navigate("/")})
         .catch(() => {});
 
-    // 모달 닫기 핸들러
-    const handleCloseModal = () => {
-        setIsModalOpen(false);
-        // setIsLoggedIn(true); // 로그인 상태 업데이트시 사용가능
-    };
-
-    // 로그인 버튼 클릭 핸들러
-    const handleLoginClick = () => {
-        setIsModalOpen(true);
-    };
-
     return (
         <header className="header">
             <div className="header-left">
@@ -56,12 +45,11 @@ export default function Header({ title }) {
                     <button className="auth-button logout" onClick={handleLogout}>로그아웃</button>
                 ) : (
                     <>
-                        <button className="auth-button login" onClick={handleLoginClick}>로그인</button>
+                        <button className="auth-button login" onClick={() => setOpen(true)}>로그인</button>
                         <button className="auth-button signup">회원가입</button>
                     </>
                 )}
             </div>
-            
             {/* 로그인 모달 컴포넌트 */}
             <LoginModal open={open} onClose={() => setOpen(false)} />
         </header>
