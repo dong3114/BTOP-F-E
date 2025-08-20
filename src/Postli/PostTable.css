@@ -1,0 +1,65 @@
+/* 테이블 스타일. */
+.list-table {
+  width: 100%;
+  border-collapse: collapse;
+  border-spacing: 0;
+  margin-top: 1.5rem;
+}
+
+.list-table th, .list-table td {
+  padding: 12px;
+  text-align: center;
+  border-bottom: 1px solid #e9ecef;
+}
+
+/* 테이블 헤더 스타일. */
+.list-table thead th {
+  background-color: #f8f9fa;
+  color: #495057;
+  font-weight: bold;
+}
+
+/* 테이블 행 호버 효과. */
+.list-table tbody tr:hover {
+  background-color: #e9ecef;
+  cursor: pointer;
+}
+
+/* 제목 링크 스타일 수정 */
+.list-table a {
+  text-decoration: none; /* 기본 상태에서 밑줄 제거 */
+  color: inherit; /* 부모 요소의 색상 상속 */
+}
+
+.list-table a:hover {
+  text-decoration: underline; /* 마우스를 올렸을 때 밑줄 추가 */
+}
+
+/* 테이블 셀 너비 설정. */
+.list-table th:nth-child(1), .list-table td:nth-child(1) { width: 10%; }
+.list-table th:nth-child(2), .list-table td:nth-child(2) { width: 40%; text-align: left; color: #000; }
+.list-table th:nth-child(3), .list-table td:nth-child(3) { width: 20%; }
+.list-table th:nth-child(4), .list-table td:nth-child(4) { width: 20%; }
+.list-table th:nth-child(5), .list-table td:nth-child(5) { width: 10%; }
+
+/* 삭제 버튼 스타일. */
+.list-table button {
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  padding: 0.3rem 0.6rem;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.list-table button:hover {
+  background-color: #5a6268;
+}
+
+/* 검색 결과가 없을 때 메시지 스타일 */
+.no-results {
+  text-align: center;
+  padding: 2rem;
+  color: #999;
+}
