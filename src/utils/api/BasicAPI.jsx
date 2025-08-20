@@ -2,25 +2,25 @@ import axios from "axios";
 import { toast } from 'react-toastify';
 import { useAuthStore } from "../store/AuthStore";
 
+const BASE_URL = process.env.REACT_APP_API_URL
+
 const BTOPAPI = axios.create({
-  baseURL: process.env.REACT_APP_API_URL,
-  timeout: 5000,
-  headers: {
-    'Content-Type': 'application/json',
-    // Authorization 헤더 추가 예시
-    // 'Authorization': `Bearer ${localStorage.getItem('token')}`,
-  },
+  baseURL: BASE_URL,
+  headers: {"Content-Type": "application/json" },
+  withCredentials: false, // JWT 인증 등 세션 쿠키 필요 시 추가
 });
 
 BTOPAPI.interceptors.request.use(
   (config) => {
-    const { isExpired, getAuthHeader, logout } = useAuthStore.getState();
-    // 만료 컷(여기서 바로 세션 정리)
-    if (isExpired()) {
+    const { token, isExpired, getAuthHeader, logout } = useAuthStore.getState();
+    // 토큰은 있지만 만료 됐을 때(여기서 바로 세션 정리)
+    if (token && isExpired()) {
       logout();
+      console.log(`url 위치: ${BASE_URL}`)
       return Promise.reject({ status: 401, message: "Token expired" });
     }
     // 스토어에서 헤더 주입
+    console.log(`url 위치: ${BASE_URL}`)
     Object.assign(config.headers, getAuthHeader());
     return config;
   },
