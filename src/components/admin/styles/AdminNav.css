@@ -1,7 +1,7 @@
 .adminnav{
     width: 210px;
     height: 100vh;
-    background-color: beige;
+    background-color: #03c75a;
     display: flex;
 }
 
@@ -19,7 +19,7 @@
 }
 
 .on{
-    background-color: rgb(216, 216, 193);
+    background-color: #17b75e;
 }
 
 .link{
@@ -34,6 +34,11 @@
             font-weight: bold;
             height: 100%;
             display: flex;
-            justify-content: center;
+            /* justify-content: center; */
             align-items: center;
+            padding-left: 50px;
+}
+
+.logoBox{
+    padding: 18px 25px 0px 25px;
 }

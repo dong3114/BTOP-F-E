@@ -1,13 +1,15 @@
 import React from 'react'
 import AdminNav from '../../components/admin/layouts/AdminNav'
 import { Outlet } from 'react-router-dom'
-import './styles/main.css'
+import './styles/AdminMain.css'
 
 function AdminMain() {
   return (
       <div className='adminMain'>
-        <AdminNav />
-        <div>
+        <div className='nav'>
+          <AdminNav />
+        </div>
+        <div className='content'>
           <Outlet />
         </div>
       </div>

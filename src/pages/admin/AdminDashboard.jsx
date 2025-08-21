@@ -2,7 +2,7 @@ import React from 'react'
 
 function AdminDashboard() {
   return (
-    <div>AdminDash</div>
+    <div className=''>AdminDash55555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555</div>
   )
 }
 

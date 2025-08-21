@@ -1,0 +1,60 @@
+/* 댓글 섹션 스타일. */
+.comments-section {
+  margin-top: 2rem;
+  border-top: 1px solid #e9ecef;
+  padding-top: 1.5rem;
+}
+
+/* 댓글 입력 영역 스타일. */
+.comment-input-area {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.comment-input-area textarea {
+  flex-grow: 1;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  resize: vertical;
+}
+
+.comment-input-area button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.comment-input-area button:hover {
+  background-color: #0056b3;
+}
+
+/* 개별 댓글 스타일. */
+.comment-item {
+  border-bottom: 1px solid #eee;
+  padding: 10px 0;
+}
+
+.comment-item:last-child {
+  border-bottom: none;
+}
+
+.comment-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9rem;
+  color: #888;
+  margin-bottom: 5px;
+}
+
+/* 댓글이 없을 때 메시지 스타일. */
+.no-comments {
+  text-align: center;
+  color: #999;
+  font-style: italic;
+}

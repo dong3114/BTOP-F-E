@@ -1,0 +1,94 @@
+/* PostView 컴포넌트의 제목과 내용 스타일. */
+.post-meta {
+  font-size: 0.9rem;
+  color: #888;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.post-meta .separator {
+  margin: 0 5px;
+  color: #ccc;
+}
+.post-content {
+  padding: 2rem 0;
+  border-bottom: 1px solid #e9ecef;
+  line-height: 1.6;
+  font-size: 1.1rem;
+}
+
+/* 첨부파일 섹션 스타일 */
+.attachments-section {
+  border-top: 1px solid #e9ecef;
+  padding-top: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.attachments-section h3 {
+  font-size: 1.1rem;
+  color: #555;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 0;
+}
+
+.attachments-section ul {
+  list-style: none;
+  padding: 0;
+  margin: 10px 0 0 0;
+}
+
+.attachments-section li {
+  margin-bottom: 8px;
+}
+
+.attachments-section a {
+  color: #007bff;
+  text-decoration: none;
+  font-size: 1rem;
+}
+
+.attachments-section a:hover {
+  text-decoration: underline;
+}
+
+/* 반응 버튼 섹션 스타일. */
+.post-reactions {
+  display: flex;
+  justify-content: center;
+  margin-top: 1.5rem;
+  gap: 1.5rem;
+}
+
+/* 개별 반응 버튼 스타일. */
+.reaction-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 120px;
+  height: 40px;
+  border-radius: 20px;
+  border: 1px solid #ccc;
+  background-color: #fff;
+  color: #333;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.reaction-button .reaction-icon {
+  margin-right: 8px;
+  font-size: 1.2rem;
+}
+
+/* 호버 시 버튼 효과. */
+.reaction-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.like .reaction-icon { color: #007bff; }
+.heart .reaction-icon { color: #dc3545; }
