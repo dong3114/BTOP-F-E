@@ -1,7 +1,7 @@
 // src/components/MainHeader.jsx
 // react관련 임포트
-import React, { useState } from "react";
-import { Link, NavLink } from "react-router-dom";
+import { useState } from "react";
+import { Link } from "react-router-dom";
 import { GiTigerHead } from "react-icons/gi";
 import { useNavigate } from 'react-router-dom'
 // 사용자 커스텀 임포트 파일
@@ -14,7 +14,6 @@ import './Header.css'; // Changed import path
 export default function Header({ title }) {
     // 로그인 및 모달 상태 관리
     const [open, setOpen] = useState(false);
-    const [isModalOpen, setIsModalOpen] = useState(false);
     const userInfo = useAuthStore((s) => s.userInfo);
     const isAuthed = !!userInfo?.token;               // 또는 !!userInfo?.memberNo
     const navigate = useNavigate();
@@ -31,7 +30,18 @@ export default function Header({ title }) {
         <header className="header">
             <div className="header-left">
                 <div className="header-title-container">
-                    <h3 className="header-title"><GiTigerHead className="title-icon" />{title}</h3>
+                    <Link to="/" >
+                        <img
+                            src="/logo_re.jpg"
+                            alt="마스코트"
+                            style={{
+                                width: "72px",
+                                height: "72px",
+                                objectFit: "contain",
+                                borderRadius: "8px",
+                            }}
+                        />
+                    </Link>
                 </div>
                 <div className='nav'>
                     {/* 자유게시판 링크를 /post로 수정 */}
