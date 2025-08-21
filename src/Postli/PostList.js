@@ -56,7 +56,7 @@ function PostList() {
     };
 
     return (
-        <>
+        <div className='abc'>
             {/* 검색바 컴포넌트 */}
             <SearchBar
                 searchTerm={searchTerm}
@@ -78,7 +78,7 @@ function PostList() {
                 goToNextPage={goToNextPage}
                 filteredPosts={filteredPosts}
             />
-        </>
+        </div>
     );
 }
 

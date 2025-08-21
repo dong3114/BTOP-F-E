@@ -42,7 +42,7 @@
     margin: 0px 40px;
 }
 
-table{
+.tablebox > table{
     border-top: 2px solid #03c75a;
     text-align: center;
     width: 100%;
