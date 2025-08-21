@@ -1,0 +1,56 @@
+.nav{
+    width: 210px;
+}
+.adminMain{
+    display:flex;
+}
+
+.content{
+    padding-left: 40px;
+    padding-right: 40px;
+    padding-top: 104px;
+    background-color: white;
+    width: 100%;
+}
+
+.title{
+    padding-top: 25px;
+    padding-left: 40px;
+    width: 100%;
+    height: 74px;
+    border-bottom: 1px solid rgb(228, 228, 228);
+}
+
+.title > p{
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.search{
+    padding-left: 15px;
+    margin-left: 40px;
+    margin-top: 30px;
+    margin-bottom: 30px;
+    height: 40px;
+    width: 500px;
+    border: 1px solid rgb(228, 228, 228);
+    
+    
+}
+
+.tablebox{
+    margin: 0px 40px;
+}
+
+table{
+    border-top: 2px solid #03c75a;
+    text-align: center;
+    width: 100%;
+    table-layout: fixed;
+}
+
+#searchText{
+    border-width: 0px;
+    height: 100%;
+    width: 440px;
+}

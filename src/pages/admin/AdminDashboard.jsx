@@ -1,0 +1,9 @@
+import React from 'react'
+
+function AdminDashboard() {
+  return (
+    <div className=''>AdminDash55555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555</div>
+  )
+}
+
+export default AdminDashboard

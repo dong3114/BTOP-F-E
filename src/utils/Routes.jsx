@@ -2,10 +2,21 @@ import { Routes, Route } from 'react-router-dom';
 import MicStreamerPage from '../pages/mic_streamer';
 import PostList from '../Postli/PostList';
 import PostView from '../PostVi/PostView';
+import AdminMain from '../pages/admin/AdminMain';
+import AdminDashboard from '../pages/admin/AdminDashboard';
+import AdminUsers from '../pages/admin/AdminUsers';
+import AdminBoards from '../pages/admin/AdminBoards';
+import AdminLogin from '../pages/admin/AdminLogin';
 
 export default function AppRoutes() {
   return (
     <Routes>
+      <Route path="/admin" element={<AdminLogin />}></Route>
+      <Route path="/admin/main" element={<AdminMain />}>
+        <Route path="" element={<AdminDashboard />}></Route>
+        <Route path="users" element={<AdminUsers />}></Route>
+        <Route path="boards" element={<AdminBoards />}></Route>
+      </Route>
       <Route path="/" element={<MicStreamerPage />} />
       <Route path="/home" element={<MicStreamerPage />} />
       {/* 작성자 선승정 */}
