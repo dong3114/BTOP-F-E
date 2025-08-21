@@ -1,9 +1,9 @@
-body{
+/* body{
     display: flex;
     justify-content: center;
     align-items: center;
     background-color: white;
-}
+} */
 
 .loginbox{
     width: 500px;
