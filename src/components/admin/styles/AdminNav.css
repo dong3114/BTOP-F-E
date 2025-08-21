@@ -22,6 +22,11 @@
     background-color: #17b75e;
 }
 
+/* .on::after{
+    content: ">";
+    font-weight: bold;
+} */
+
 .link{
     text-decoration: none;
     width: 100%;

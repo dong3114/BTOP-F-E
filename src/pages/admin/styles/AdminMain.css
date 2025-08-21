@@ -42,15 +42,21 @@
     margin: 0px 40px;
 }
 
-.tablebox > table{
+.tablebox table{
     border-top: 2px solid #03c75a;
     text-align: center;
     width: 100%;
     table-layout: fixed;
+    /* border-collapse: collapse; */
 }
 
 #searchText{
     border-width: 0px;
     height: 100%;
     width: 440px;
+}
+
+.tablebox th, td{
+    height: 50px;
+    border-bottom: 1px solid rgb(228, 228, 228);
 }
