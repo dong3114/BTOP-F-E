@@ -1,4 +1,4 @@
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Outlet } from 'react-router-dom';
 import MicStreamerPage from '../pages/mic_streamer';
 import PostList from '../Postli/PostList';
 import PostView from '../PostVi/PostView';
@@ -7,6 +7,7 @@ import AdminDashboard from '../pages/admin/AdminDashboard';
 import AdminUsers from '../pages/admin/AdminUsers';
 import AdminBoards from '../pages/admin/AdminBoards';
 import AdminLogin from '../pages/admin/AdminLogin';
+import MainLayout from '../pages/mainlayout';
 
 export default function AppRoutes() {
   return (
@@ -17,13 +18,18 @@ export default function AppRoutes() {
         <Route path="users" element={<AdminUsers />}></Route>
         <Route path="boards" element={<AdminBoards />}></Route>
       </Route>
-      <Route path="/" element={<MicStreamerPage />} />
-      <Route path="/home" element={<MicStreamerPage />} />
-      {/* 작성자 선승정 */}
-      <Route path="/post" element={<PostList />} />
-      <Route path="/post/:id" element={<PostView />} />
-      <Route path="/notice" element={<h2>공지사항 페이지</h2>} />
+
+      <Route element={<MainLayout><Outlet /></MainLayout>}>
+        <Route path="/" element={<MicStreamerPage />} />
+        <Route path="/home" element={<MicStreamerPage />} />
+        {/* 작성자 선승정 */}
+        <Route path="/post" element={<PostList />} />
+        <Route path="/post/:id" element={<PostView />} />
+        <Route path="/notice" element={<h2>공지사항 페이지</h2>} />
+      </Route>
     </Routes>
+
+
 
   );
 }
