@@ -1,12 +1,16 @@
+/* JJ */
+
+/* ===== 상단 마이크 영역 ===== */
 .mic-page{
   min-height: calc(100vh - 80px); /* 헤더 높이 있으면 조절 */
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center; /* 수직/수평 중앙 */
+  justify-content: flex-start; /* 리스트가 길어질 때 가독성 위해 상단 정렬 */
   padding: 24px;
   background: #ddd; /* 필요 없으면 지워도 됨 */
 }
+
 .mic-container {
   position: relative;
   width: 180px;
@@ -55,6 +59,8 @@
   color: #222;
   font-size: 14px;
 }
+
+/* 기존 transcript 박스(사용 안 하면 삭제 가능) */
 .transcript {
   max-width: 640px;
   margin: 12px auto 0;
@@ -66,3 +72,69 @@
   line-height: 1.6;
 }
 .transcript .final-item { margin: 4px 0; }
+
+/* ===== 하단 STT/표준어 두 칼럼 영역 ===== */
+.mic-columns {
+  width: min(980px, 100%);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.col { display: flex; flex-direction: column; gap: 10px; }
+
+.col-title {
+  font-weight: 700;
+  margin: 6px 0 4px;
+}
+
+/* 실시간 텍스트 박스 */
+.box.live {
+  min-height: 72px;
+  padding: 12px;
+  border: 1px solid #e6e6e6;
+  border-radius: 10px;
+  background: #fafafa;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* 최종 리스트 */
+.list {
+  border: 1px solid #efefef;
+  border-radius: 10px;
+  background: #fff;
+  max-height: 320px;      /* 필요시 높이 조정 */
+  overflow: auto;
+}
+
+.list-item {
+  display: grid;
+  grid-template-columns: 64px 1fr;
+  gap: 8px;
+  padding: 10px 12px;
+  border-bottom: 1px solid #f3f3f3;
+}
+.list-item:last-child { border-bottom: none; }
+
+.label {
+  color: #777;
+  font-size: 12px;
+  padding-top: 2px;
+}
+
+.value {
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.empty { color: #aaa; padding: 16px; text-align: center; }
+.muted { color: #bbb; }
+
+/* 반응형: 좁은 화면에서 1열로 */
+@media (max-width: 780px) {
+  .mic-columns {
+    grid-template-columns: 1fr;
+  }
+}
