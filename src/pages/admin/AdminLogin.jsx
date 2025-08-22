@@ -2,10 +2,12 @@ import React, { useRef, useState } from 'react'
 import './styles/AdminLogin.css'
 import logogreen from '../../img/admin/logo_green.png'
 import { Auth } from '../../utils/api/MemberAPI';
+import { useNavigate } from 'react-router-dom';
 
 function AdminLogin() {
   const firstFieldRef = useRef(null);
   const [submitting, setSubmitting] = useState(false);
+  const navigate = useNavigate();
   
   const handleSubmit = (e) => {
       e.preventDefault();
@@ -17,7 +19,7 @@ function AdminLogin() {
       setSubmitting(true);
       Auth.AdminLogin({ memberId: data.memberId, memberPw: data.memberPw })
         .then((res) => {
-          
+          navigate("/admin/main")
         })
         .finally(() => setSubmitting(false));
     };
