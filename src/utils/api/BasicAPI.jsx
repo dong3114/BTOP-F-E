@@ -36,32 +36,33 @@ const showToastOnce = (msg) => {
   setTimeout(() => (toastLock = false), 1200);
 };
 
+// BasicAPI.jsx
 BTOPAPI.interceptors.response.use(
   (res) => res,
   (err) => {
     const status = err?.response?.status ?? 0;
+    const store = useAuthStore.getState();
+    const hasToken = !!store.userInfo?.token;
 
     if (status === 0) {
       showToastOnce('서버 연결 실패');
       return Promise.reject(err);
     }
-    
-    switch (status) {
-      case 401:
-        useAuthStore.getState().logout(); 
+
+    if (status === 401) {
+      if (hasToken) {               // 세션 만료 등: 전역 처리
+        store.logout();
         showToastOnce('로그인이 필요합니다.');
-        break;
-      case 403:
-        showToastOnce('권한이 없습니다.');
-        break;
-      case 500:
-        showToastOnce('서버 에러입니다.');
-        break;
-      default:
-        showToastOnce(err?.response?.data?.errorMessage || "알 수 없는 오류입니다.");
-        break;
+      }
+      return Promise.reject(err);   // 토큰 없으면(로그인 실패 등) 호출부가 처리
     }
-    return Promise.reject(err); // 호출부에서 catch로 받게 함
+
+    switch (status) {
+      case 403: showToastOnce('권한이 없습니다.'); break;
+      case 500: showToastOnce('서버 에러입니다.'); break;
+      default:  showToastOnce(err?.response?.data?.errorMessage || "알 수 없는 오류입니다.");
+    }
+    return Promise.reject(err);
   }
 );
 
