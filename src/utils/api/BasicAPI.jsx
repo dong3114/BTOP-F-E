@@ -16,7 +16,6 @@ BTOPAPI.interceptors.request.use(
     // 토큰은 있지만 만료 됐을 때(여기서 바로 세션 정리)
     if (token && isExpired()) {
       logout();
-      console.log(`url 위치: ${BASE_URL}`)
       return Promise.reject({ status: 401, message: "Token expired" });
     }
     // 스토어에서 헤더 주입

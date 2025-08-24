@@ -8,6 +8,7 @@ import AdminUsers from '../pages/admin/AdminUsers';
 import AdminBoards from '../pages/admin/AdminBoards';
 import AdminLogin from '../pages/admin/AdminLogin';
 import MainLayout from '../pages/mainlayout';
+import MemberRegister from '../pages/register';
 
 export default function AppRoutes() {
   return (
@@ -22,6 +23,10 @@ export default function AppRoutes() {
       <Route element={<MainLayout><Outlet /></MainLayout>}>
         <Route path="/" element={<MicStreamerPage />} />
         <Route path="/home" element={<MicStreamerPage />} />
+        {/* 회원관련 라우팅 포인트 */}
+        <Route path='member' element={<Outlet />}>
+          <Route path='register' element={<MemberRegister />} />
+        </Route>
         {/* 작성자 선승정 */}
         <Route path="/post" element={<PostList />} />
         <Route path="/post/:id" element={<PostView />} />

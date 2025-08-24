@@ -5,7 +5,7 @@ import { useAuthStore } from "../../utils/store/AuthStore";
 import { Auth } from "../../utils/api/MemberAPI";
 import LoginModal from "../modals/login/LoginModal";
 import ProfileDropdown from "../dropdowns/DropdownMenu";
-import "./Header.css";
+import "./styles/Header.css";
 
 export default function Header({ title }) {
   const [openLogin, setOpenLogin] = useState(false);
@@ -43,7 +43,6 @@ export default function Header({ title }) {
       <div className="auth-buttons">
         {isAuthed ? (
           <>
-            {/* ✅ 앵커 래퍼: 이 요소의 '오른쪽 끝'을 기준으로 드롭다운이 뜸 */}
             <div className="header-actions">
               <button
                 type="button"
@@ -76,7 +75,7 @@ export default function Header({ title }) {
             <button className="auth-button login" onClick={() => setOpenLogin(true)}>
               로그인
             </button>
-            <button className="auth-button signup">회원가입</button>
+            <button className="auth-button signup" onClick={() => navigate("/member/register")}>회원가입</button>
           </>
         )}
       </div>
