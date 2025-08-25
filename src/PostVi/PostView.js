@@ -10,7 +10,7 @@ import CommentSection from './CommentSection';
 function PostView() {
     const [comments, setComments] = useState([]);
     const [newComment, setNewComment] = useState('');
-    const [post, setPost] = useState(null);
+    const [post, setPost] = useState([]);
     const [postIndex, setPostIndex] = useState(-1);
 
     const { id } = useParams();

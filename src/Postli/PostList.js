@@ -11,18 +11,20 @@ import Pagination from './Pagination';
 
 // 게시글 목록 페이지의 메인 컴포넌트입니다.
 function PostList() {
+    const [postsData, setPostsData] = useState(posts); 
     const [currentPage, setCurrentPage] = useState(1);
     const [searchTerm, setSearchTerm] = useState('');
+    const [SelectedPostId, setSelectedPostId] = useState(null);
     const [searchCategory, setSearchCategory] = useState('title');
     const postsPerPage = 10;
 
-    // 검색어와 카테고리에 따라 게시글을 필터링합니다.
-    const filteredPosts = posts.filter(post => {
-        if (searchTerm === '') {
-            return true;
-        }
-        const target = searchCategory === 'title' ? post.title : post.author;
-        return target.toLowerCase().includes(searchTerm.toLowerCase());
+    // 중복된 선언 제거하고, postsData 기준으로 필터링
+    const filteredPosts = postsData.filter(post => {
+    if (searchTerm === '') {
+        return true;
+    }
+    const target = searchCategory === 'title' ? post.title : post.author;
+    return target.toLowerCase().includes(searchTerm.toLowerCase());
     });
 
     // 필터링된 게시글을 페이지네이션에 맞게 자릅니다.
@@ -55,8 +57,17 @@ function PostList() {
         }
     };
 
+    const handlePostClick = (postId) => {
+    const updatedPosts = postsData.map(post =>
+        post.id === postId ? { ...post, views: post.views + 1 } : post
+    );
+    setPostsData(updatedPosts);
+    setSelectedPostId(postId);
+
+    };
+
     return (
-        <div className='abc'>
+        <div className='width'>
             {/* 검색바 컴포넌트 */}
             <SearchBar
                 searchTerm={searchTerm}
@@ -67,6 +78,7 @@ function PostList() {
             {/* 게시글 표 컴포넌트 */}
             <PostTable
                 currentPosts={currentPosts}
+                onPostClick={handlePostClick}
             />
             {/* 페이지네이션 컴포넌트 */}
             <Pagination
