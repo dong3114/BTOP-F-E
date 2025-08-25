@@ -1,0 +1,12 @@
+/* dropdown-utils.css : 간단 레이아웃/여백 유틸 (프로젝트 공통 폴더 추천: src/styles/) */
+.u-flex { display: flex; }
+.u-items-center { align-items: center; }
+.u-justify-end { justify-content: flex-end; }
+.u-w-full { width: 100%; }
+
+.u-ml-12 { margin-left: 12px; }
+.u-mr-12 { margin-right: 12px; }
+.u-mt-8  { margin-top: 8px;  }
+.u-mt-12 { margin-top: 12px; }
+.u-pt-32 { padding-top: 32px; }
+.u-px-32 { padding-left: 32px; padding-right: 32px; }

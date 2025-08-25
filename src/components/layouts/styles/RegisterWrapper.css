@@ -1,0 +1,35 @@
+/* 페이지 배경/가운데 정렬 컨테이너 */
+.page {
+  min-height: 100vh;          /* 화면 높이 채우기 */
+  width: 100%;
+  display: flex;
+  justify-content: center;    /* 가로 중앙 */
+  background: #f5f6f7;        /* 네이버 폼 배경 톤과 유사 */
+  padding: 16px;              /* 좌우 여백 */
+  box-sizing: border-box;
+}
+
+/* 수직 정렬: 기본은 중앙, 필요하면 top으로 */
+.page--center { align-items: center; }
+.page--top    { align-items: flex-start; padding-top: 40px; }
+
+/* 폼 카드 박스 */
+.card {
+  width: 100%;
+  background: #fff;
+  border: 1px solid #e5e7eb;    /* 연한 그레이 보더 */
+  border-radius: 12px;
+  box-shadow:
+    0 10px 15px -3px rgba(0,0,0,0.1),
+    0 4px 6px -4px rgba(0,0,0,0.1);
+  padding: 24px;
+  box-sizing: border-box;
+}
+
+/* (선택) 타이틀 스타일이 필요하면 사용 */
+.form-title {
+  margin: 0 0 16px 0;
+  font-size: 20px;
+  font-weight: 700;
+  color: #111827;
+}
