@@ -56,6 +56,6 @@
     color: white;
 }
 
-button:hover{
+.btnbox button:hover{
     background-color: #17b75e;
 }

@@ -11,11 +11,11 @@ function AdminNav() {
 
     const [activeIndex, setActiveIndex] = useState(0);
 
-    useEffect(() => {
-      if(!isAuthed){
-        navigate("/admin")
-      }
-  }, []);
+  //   useEffect(() => {
+  //     if(!isAuthed){
+  //       navigate("/admin")
+  //     }
+  // }, []);
 
   // 메뉴 배열
   const menuItems = [

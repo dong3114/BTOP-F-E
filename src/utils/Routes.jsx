@@ -8,6 +8,8 @@ import AdminUsers from '../pages/admin/AdminUsers';
 import AdminBoards from '../pages/admin/AdminBoards';
 import AdminLogin from '../pages/admin/AdminLogin';
 import MainLayout from '../pages/mainlayout';
+import AdminBoardInfo from '../pages/admin/AdminBoardInfo';
+import AdminUserInfo from '../pages/admin/AdminUserInfo';
 
 export default function AppRoutes() {
   return (
@@ -17,6 +19,8 @@ export default function AppRoutes() {
         <Route path="" element={<AdminDashboard />}></Route>
         <Route path="users" element={<AdminUsers />}></Route>
         <Route path="boards" element={<AdminBoards />}></Route>
+        <Route path="boards/1" element={<AdminBoardInfo />}></Route>
+        <Route path="users/1" element={<AdminUserInfo />}></Route>
       </Route>
 
       <Route element={<MainLayout><Outlet /></MainLayout>}>
