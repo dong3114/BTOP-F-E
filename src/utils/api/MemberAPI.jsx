@@ -73,11 +73,20 @@ export const MyInfo = {
   },
   ValidateEmail: (memberEmail) => {
     return BTOPAPI.get("/api/member/register/validate/email", {params:{memberEmail}})
-      .then(({ data}) => {
+      .then(({data}) => {
         const available = !!data?.available;
         const text = available? "유효":"불가"
         console.log(`회원 이메일${memberEmail}는w ${text}합니다.`)
         return available;
+      })
+  },
+  Confirm: (memberInfo) => {
+    return BTOPAPI.post("/api/member/register", memberInfo)
+      .then((res) => {
+        console.log("회원가입 성공", res);
+      })
+      .catch((err) => {
+        console.error("에러 발생", err);
       })
   },
 }

@@ -1,0 +1,43 @@
+.form-row.gender-input { margin-bottom: 16px; }
+
+.gender-group {
+  display: flex;
+  gap: 12px;
+}
+
+.gender-option {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border: 1px solid #dadada;
+  border-radius: 8px;
+  background: #fff;
+  cursor: pointer;
+  user-select: none;
+  transition: box-shadow .15s ease, border-color .15s ease, background .15s ease;
+}
+
+.gender-option.checked {
+  border-color: #10b981;
+  box-shadow: 0 0 0 3px rgba(16,185,129,.15);
+  background: #f8fffc;
+}
+
+/* 실제 라디오 숨김(접근성 유지) */
+.gender-option input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* 키보드 포커스 링 */
+.gender-option:has(input[type="radio"]:focus-visible) {
+  outline: 2px solid #10b981;
+  outline-offset: 2px;
+}
+
+@media (max-width: 420px) {
+  .gender-option { padding: 8px 10px; }
+}
