@@ -21,7 +21,11 @@ export const Auth = {
         const login = loginResponse(data);
         useAuthStore.getState().setSession(login);  // 세션 저장 (persist가 sessionStorage에 기록)
         return data; // 호출측에서 그대로 사용
-      });
+      })
+      .catch((err) => {
+        console.error('로그인 중 에러 발생', err);
+        throw err;
+      })
   },
   Logout: () => {
     useAuthStore.getState().logout();
