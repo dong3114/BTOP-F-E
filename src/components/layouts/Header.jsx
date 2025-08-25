@@ -5,7 +5,7 @@ import { useAuthStore } from "../../utils/store/AuthStore";
 import { Auth } from "../../utils/api/MemberAPI";
 import LoginModal from "../modals/login/LoginModal";
 import ProfileDropdown from "../dropdowns/DropdownMenu";
-import "./Header.css";
+import "./styles/Header.css";
 
 export default function Header({ title }) {
   const [openLogin, setOpenLogin] = useState(false);
@@ -76,7 +76,7 @@ export default function Header({ title }) {
             <button className="auth-button login" onClick={() => setOpenLogin(true)}>
               로그인
             </button>
-            <button className="auth-button signup">회원가입</button>
+            <button className="auth-button signup" onClick={() => navigate("/member/register")}>회원가입</button>
           </>
         )}
       </div>

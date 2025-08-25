@@ -1,0 +1,59 @@
+/* 입력 + 버튼을 한 줄로, 버튼은 오른쪽 정렬 */
+.field-line {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap: 8px;             /* 입력/버튼 간격 */
+}
+
+/* 입력은 남은 공간 전체를 차지 */
+.field-input {
+  flex: 1 1 auto;       /* ← 남은공간 꽉 채우기 */
+  height: 44px;
+  padding: 10px 12px;
+  border: 1px solid #dadada;
+  border-radius: 8px;
+  box-sizing: border-box;
+  font-size: 15px;
+  background: #fff;
+  outline: none;
+}
+
+/* 포커스 스타일 */
+.field-input:focus {
+  border-color: #10b981;
+  box-shadow: 0 0 0 3px rgba(16,185,129,.15);
+}
+
+/* 중복 확인 버튼: 오른쪽 끝에 붙음 (flex라 자동) */
+.field-btn {
+  height: 44px;
+  padding: 0 12px;
+  border: 1px solid #dadada;
+  border-radius: 8px;
+  background: #f9fafb;
+  font-size: 14px;
+  color: #111827;
+  cursor: pointer;
+  white-space: nowrap;   /* 줄바꿈 방지 */
+}
+.field-btn:disabled {
+  cursor: not-allowed;
+  opacity: .6;
+}
+.field-btn:not(:disabled):hover {
+  background: #f3f4f6;
+}
+
+/* 메시지 영역: 레이아웃 점프 방지 */
+.form-msg {
+  margin-top: 8px;
+  min-height: 18px;     /* 항상 자리 유지 */
+  font-size: 14px;
+  color: #059669;       /* 기본 성공색 */
+}
+.form-msg:has(> .error),
+.form-msg.error {
+  color: #ef4444;       /* 에러일 때 빨강 (필요 시 클래스 토글) */
+}
+

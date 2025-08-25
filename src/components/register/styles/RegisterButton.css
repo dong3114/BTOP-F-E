@@ -1,0 +1,36 @@
+/* 버튼 래퍼: 오른쪽 정렬 */
+.register-btn-wrapper {
+  display: flex;
+  justify-content: flex-end; /* 오른쪽 끝 */
+  margin-top: 16px;
+}
+
+/* 기본 버튼 스타일 */
+.register-btn {
+  height: 44px;
+  padding: 0 20px;
+  border: none;
+  border-radius: 8px;
+  background-color: #10b981; /* emerald-500 */
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.register-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.register-btn:not(:disabled):hover {
+  background-color: #059669; /* emerald-600 */
+}
+
+/* 로딩 시 버튼 대신 보일 스켈레톤 컨테이너(오른쪽 정렬 유지) */
+.register-btn-skeleton {
+  width: 120px;     /* 버튼과 비슷한 가로 폭 */
+  height: 44px;     /* 버튼 높이와 동일 */
+  border-radius: 8px;
+}
