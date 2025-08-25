@@ -32,7 +32,7 @@ function AdminLogin() {
       <form className='adminloginfrm' onSubmit={handleSubmit}>
         <div className='inputbox'><input type='text' ref={firstFieldRef} name='memberId' placeholder="아이디" required ></input></div>
         <div className='inputbox'><input type='password' name='memberPw' placeholder="비밀번호" required></input></div>
-        <div className='btnbox'><button type='submit' disabled={submitting}>{submitting ? "로그인 중…" : "로그인"}</button></div>
+        <div className='btnbox'><button type='submit' disabled={submitting}>{submitting ? "로그인 중" : "로그인"}</button></div>
       </form>
     </div>
     </div>

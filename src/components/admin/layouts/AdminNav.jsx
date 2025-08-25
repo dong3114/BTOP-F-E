@@ -7,15 +7,19 @@ import { useAuthStore } from '../../../utils/store/AuthStore';
 function AdminNav() {
   const userInfo = useAuthStore((s) => s.userInfo);
   const isAuthed = !!userInfo?.token; 
+  const roleLevel = userInfo?.roleLevel;
   const navigate = useNavigate();
 
     const [activeIndex, setActiveIndex] = useState(0);
 
-  //   useEffect(() => {
-  //     if(!isAuthed){
-  //       navigate("/admin")
-  //     }
-  // }, []);
+    useEffect(() => {
+           console.log(roleLevel)
+      if(!isAuthed){
+        navigate("/admin")
+      }
+  }, []);
+
+
 
   // 메뉴 배열
   const menuItems = [

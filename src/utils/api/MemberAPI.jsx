@@ -28,7 +28,7 @@ export const Auth = {
     return Promise.resolve(true);
   },
   AdminLogin: (payload) => {
-    return BTOPAPI.post("/api/admin", payload)
+    return BTOPAPI.post("/api/admin/login", payload)
       .then(({ data }) => {
         console.log("API_URL =", process.env.REACT_APP_API_URL);
         const login = loginResponse(data);
