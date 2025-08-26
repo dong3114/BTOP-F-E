@@ -29,7 +29,7 @@ export default function AppRoutes() {
         </Route>
         {/* 작성자 선승정 */}
         <Route path="/post" element={<PostList />} />
-        <Route path="/post/:id" element={<PostView />} />
+        <Route path="/post/:boardNo" element={<PostView />} />
         <Route path="/notice" element={<h2>공지사항 페이지</h2>} />
       </Route>
     </Routes>

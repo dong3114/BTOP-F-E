@@ -5,17 +5,17 @@ import { FaThumbsUp, FaRegComment, FaHeart } from "react-icons/fa";
 function PostContent({ post, comments }) {
     return (
         <>
-            <h2>{post.title}</h2>
+            <h2>{post.boardTitle}</h2>
             <div className='post-meta'>
-                <span>작성자: {post.author}</span>
+                <span>작성자: {post.memberNo}</span>
                 <span className="separator">|</span>
-                <span>작성일: {post.date}</span>
+                <span>작성일: {post.createAt}</span>
                 <span className="separator">|</span>
                 <span>조회수: {post.views}</span>
             </div>
             <hr />
             <div className='post-content'>
-                <p>{post.content}</p>
+                <p>{post.boardDetail}</p>
             </div>
             <div className='post-reactions'>
                 <button className='reaction-button like'>
@@ -25,7 +25,7 @@ function PostContent({ post, comments }) {
                     <FaHeart className='reaction-icon' /> 좋아요
                 </button>
                 <button className='reaction-button comment'>
-                    <FaRegComment className='reaction-icon' /> 댓글 ({comments.length})
+                    <FaRegComment className='reaction-icon' /> 댓글 ({comments.length || 0})
                 </button>
             </div>
         </>
