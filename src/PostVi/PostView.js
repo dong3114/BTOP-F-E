@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom'; // useNavigate 추가
-import posts from '../posts';
+import React, { useState, useEffect, useRef } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { Both } from '../utils/api/BoardApi';
 import './PostView.css';
 import PostContent from './PostContent';
 import PostActions from './PostActions';
@@ -8,71 +8,97 @@ import PostNavigation from './PostNavigation';
 import CommentSection from './CommentSection';
 
 function PostView() {
-    const [comments, setComments] = useState([]);
-    const [newComment, setNewComment] = useState('');
-    const [post, setPost] = useState([]);
-    const [postIndex, setPostIndex] = useState(-1);
+  const [comments, setComments] = useState([]);
+  const [newComment, setNewComment] = useState('');
+  const [post, setPost] = useState(null);         // ← 원본 스키마 그대로
+  const [postIndex, setPostIndex] = useState(-1);
+  const [apiPosts, setApiPosts] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-    const { id } = useParams();
-    const navigate = useNavigate(); // navigate 생성
+  const { boardNo } = useParams();
+  const navigate = useNavigate();
 
-    useEffect(() => {
-        const currentIndex = posts.findIndex((p) => p.id === parseInt(id));
-        setPostIndex(currentIndex);
+  // (선택) Dev 모드 중복 증가 방지 용도
+  const viewedOnceRef = useRef(false);
 
-        if (currentIndex !== -1) {
-            setPost(posts[currentIndex]);
+  // 1) 목록: 내비게이션용으로만 사용 (원본 데이터 유지)
+  useEffect(() => {
+    let alive = true;
+    (async () => {
+      try {
+        const list = await Both.BothList();
+        if (!alive) return;
+        if (Array.isArray(list)) {
+          setApiPosts(list);
+          const idx = list.findIndex(p => String(p.boardNo) === String(boardNo));
+          setPostIndex(idx);
         } else {
-            setPost(null);
+          setApiPosts([]);
+          setPostIndex(-1);
         }
-    }, [id]);
+      } catch (e) {
+        console.error('목록 로딩 실패:', e);
+        if (!alive) return;
+        setApiPosts([]);
+        setPostIndex(-1);
+      }
+    })();
+    return () => { alive = false; };
+  }, [boardNo]);
 
-    if (!post) {
-        return <div className="outer">게시글을 찾을 수 없어.</div>;
-    }
+  // 2) 상세: 조회수 증가 트리거 (원본 필드명 그대로 setPost)
+  useEffect(() => {
+    let alive = true;
+    setIsLoading(true);
+    (async () => {
+      try {
+        // 서버에서 이 호출 시 views++ 처리된다고 가정
+        const detail = await Both.BothInfo(boardNo);
+        if (!alive) return;
+        setPost(detail);            // ← boardTitle/boardDetail/... 원본 그대로
+        viewedOnceRef.current = true;
+      } catch (e) {
+        console.error('상세 로딩 실패:', e);
+        if (!alive) return;
+        setPost(null);
+      } finally {
+        if (alive) setIsLoading(false);
+      }
+    })();
+    return () => { alive = false; };
+  }, [boardNo]);
 
-    const prevPost = postIndex > 0 ? posts[postIndex - 1] : null;
-    const nextPost = postIndex < posts.length - 1 ? posts[postIndex + 1] : null;
+  if (isLoading) return <div className="outer">게시글을 불러오는 중...</div>;
+  if (!post)     return <div className="outer">게시글을 찾을 수 없어.</div>;
 
-    // 목록으로 돌아가기 버튼 수정
-    const handleGoBack = () => {
-        navigate('/post'); // 항상 PostList로 이동
-    };
+  const prevPost = postIndex > 0 ? apiPosts[postIndex - 1] : null;
+  const nextPost = postIndex >= 0 && postIndex < apiPosts.length - 1 ? apiPosts[postIndex + 1] : null;
 
-    const handleCommentChange = (e) => {
-        setNewComment(e.target.value);
-    };
+  const handleGoBack = () => navigate('/post');
+  const handleCommentChange = (e) => setNewComment(e.target.value);
+  const handleCommentSubmit = () => {
+    if (!newComment.trim()) return;
+    const nextId = comments.length ? comments[comments.length - 1].boardNo + 1 : 1;
+    const date = new Date().toLocaleDateString('ko-KR');
+    const time = new Date().toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' });
+    setComments([...comments, { boardNo: nextId, author: '익명', content: newComment, date, time }]);
+    setNewComment('');
+  };
 
-    const handleCommentSubmit = () => {
-        if (newComment.trim() !== '') {
-            const commentId = comments.length > 0 ? comments[comments.length - 1].id + 1 : 1;
-            const date = new Date().toLocaleDateString('ko-KR');
-            const time = new Date().toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' });
-            const newCommentData = {
-                id: commentId,
-                author: '익명',
-                content: newComment,
-                date: date,
-                time: time
-            };
-            setComments([...comments, newCommentData]);
-            setNewComment('');
-        }
-    };
-
-    return (
-        <div className='post-view'>
-            <PostContent post={post} comments={comments} />
-            <PostActions handleGoBack={handleGoBack} />
-            <PostNavigation prevPost={prevPost} nextPost={nextPost} />
-            <CommentSection
-                comments={comments}
-                newComment={newComment}
-                handleCommentChange={handleCommentChange}
-                handleCommentSubmit={handleCommentSubmit}
-            />
-        </div>
-    );
+  return (
+    <div className='post-view'>
+      {/* PostContent는 post.boardTitle / post.boardDetail / post.views / post.createdAt 그대로 사용 */}
+      <PostContent post={post} comments={comments} />
+      <PostActions handleGoBack={handleGoBack} />
+      <PostNavigation prevPost={prevPost} nextPost={nextPost} />
+      <CommentSection
+        comments={comments}
+        newComment={newComment}
+        handleCommentChange={handleCommentChange}
+        handleCommentSubmit={handleCommentSubmit}
+      />
+    </div>
+  );
 }
 
 export default PostView;

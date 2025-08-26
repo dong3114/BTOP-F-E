@@ -1,5 +1,5 @@
 // Postli/PostList.jsx
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 // posts.js에서 더미 데이터를 불러옵니다.
 import posts from '../posts';
 // CSS 파일은 PostList.css 하나만 필요합니다.
@@ -8,10 +8,11 @@ import './PostList.css';
 import SearchBar from './SearchBar';
 import PostTable from './PostTable';
 import Pagination from './Pagination';
+import { Both } from '../utils/api/BoardApi';
 
 // 게시글 목록 페이지의 메인 컴포넌트입니다.
 function PostList() {
-    const [postsData, setPostsData] = useState(posts); 
+    const [postsData, setPostsData] = useState([]); 
     const [currentPage, setCurrentPage] = useState(1);
     const [searchTerm, setSearchTerm] = useState('');
     const [SelectedPostId, setSelectedPostId] = useState(null);
@@ -19,13 +20,28 @@ function PostList() {
     const postsPerPage = 10;
 
     // 중복된 선언 제거하고, postsData 기준으로 필터링
-    const filteredPosts = postsData.filter(post => {
+const safePosts = Array.isArray(postsData) ? postsData : [];
+const filteredPosts = safePosts.filter(post => {
     if (searchTerm === '') {
         return true;
     }
-    const target = searchCategory === 'title' ? post.title : post.author;
-    return target.toLowerCase().includes(searchTerm.toLowerCase());
-    });
+    const target = searchCategory === 'boardTitle' ? post.boardTitle : post.memberNo;
+    return target?.toString().toLowerCase().includes(searchTerm.toLowerCase());
+});
+
+    useEffect(() => {
+        Both.BothList().then((data) => {
+            // data가 배열인지 확인
+            if (Array.isArray(data)) {
+                setPostsData(data);
+                console.log(postsData,"sdfdsfdsfdsfdsgwg");
+                
+            } else {
+                console.log("서버 응답이 배열이 아님:", data);
+                setPostsData([]);
+            }
+        });
+    }, []);
 
     // 필터링된 게시글을 페이지네이션에 맞게 자릅니다.
     const indexOfLastPost = currentPage * postsPerPage;
