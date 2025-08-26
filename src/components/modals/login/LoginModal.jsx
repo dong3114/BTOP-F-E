@@ -2,10 +2,12 @@ import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { Auth } from "../../../utils/api/MemberAPI"; // 경로는 프로젝트 구조에 맞춰 유지
 import "./login_modal.css";
+import { useNavigate } from "react-router-dom";
 
 export default function LoginModal({ open, onClose }) {
   const firstFieldRef = useRef(null);
   const [submitting, setSubmitting] = useState(false);
+  const navigate = useNavigate();
 
   // ESC 닫기 + 바디 스크롤 잠금 + 첫 필드 포커스
   useEffect(() => {
@@ -45,6 +47,11 @@ export default function LoginModal({ open, onClose }) {
     Auth.Login({ memberId: data.memberId, memberPw: data.memberPw })
       .then((res) => {
         if (!res?.error) onClose();
+      })
+      .catch((err) => {
+        alert("로그인 정보를 확인하세요");
+        navigate("/")
+        onClose();
       })
       .finally(() => setSubmitting(false));
   };

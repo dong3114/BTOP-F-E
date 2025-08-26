@@ -1,0 +1,173 @@
+/* 드롭다운 컨테이너: 트리거 버튼의 부모를 position:relative로 두고
+   이 요소는 absolute로 우측 정렬해 쓰면 편함 */
+.dropdown {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 8px);
+  z-index: 1000;
+}
+
+/* 패널 박스 */
+.dropdown__panel {
+  position: relative;
+  width: 320px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow:
+    0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -4px rgba(0, 0, 0, 0.1);
+  padding: 16px 16px 12px 16px;
+  box-sizing: border-box;
+}
+
+/* 말풍선 꼬리 */
+.dropdown__caret {
+  position: absolute;
+  top: -8px;
+  right: 24px;
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-bottom: 8px solid #fff;
+}
+
+/* 닫기 버튼 */
+.dropdown__close {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  border: none;
+  background: transparent;
+  font-size: 16px;
+  color: #666;
+  cursor: pointer;
+}
+.dropdown__close:hover {
+  color: #111;
+}
+
+/* 프로필 섹션 */
+.dropdown__profile {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 8px 0 8px;
+}
+
+.dropdown__avatarBtn {
+  border: none;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+}
+
+.dropdown__avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 999px;
+  object-fit: cover;
+  display: block;
+}
+
+.dropdown__meta {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.dropdown__name {
+  font-weight: 600;
+  color: #111827; /* gray-900 */
+  font-size: 16px;
+}
+
+/* 구분선 */
+.dropdown__divider {
+  height: 1px;
+  background: #e5e7eb; /* gray-200 */
+  margin: 16px 0;
+}
+
+/* 섹션 */
+.dropdown__section {
+  padding: 0 8px 8px 8px;
+}
+
+.dropdown__title {
+  font-weight: 600;
+  color: #111827;
+  margin-bottom: 8px;
+}
+
+/* 기본 버튼 */
+.dropdown__primaryBtn {
+  display: block;
+  width: 100%;
+  height: 36px;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  background: #f9fafb;
+  color: #111827;
+  font-size: 14px;
+  cursor: pointer;
+}
+.dropdown__primaryBtn:hover {
+  background: #f3f4f6; /* gray-100 */
+  font-weight: 600;
+}
+
+/* 공통 아바타 유틸: 크기를 변수로 제어 */
+.avatar {
+  --size: 80px;              /* 기본 크기 */
+  width: var(--size);
+  height: var(--size);
+  border-radius: 50%;        /* 원형 마스크 */
+  object-fit: cover;         /* 영역 꽉 채우되 잘라내기 */
+  object-position: center;   /* 중앙 기준으로 크롭 */
+  display: block;            /* 인라인 갭 제거 */
+  background: #f3f4f6;       /* 빈 로딩/배경 대비 */
+}
+
+/* 필요 시 사이즈 프리셋 */
+.avatar--sm { --size: 40px; }
+.avatar--md { --size: 64px; }
+.avatar--lg { --size: 80px; }
+.avatar--xl { --size: 96px; }
+
+/* ===== Header 정렬 보정(크기 변경 없이 수직 중앙) ===== */
+
+/* 로그아웃 버튼 높이 값(필요하면 48을 바꾸세요) */
+.auth-buttons .header-user { 
+  --btn-h: 48px;
+}
+
+/* 래퍼를 버튼 높이에 맞추고 flex로 수직 중앙 정렬 */
+.auth-buttons .header-user {
+  display: inline-flex;
+  align-items: center;        /* 수직 중앙 */
+  height: var(--btn-h);       /* 48px */
+  position: relative;         /* 드롭다운 기준점 (이미 인라인 style이면 생략 가능) */
+}
+
+/* 트리거 버튼도 동일 높이 + 가운데 정렬 */
+.auth-buttons .header-user .profile-trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;               /* 래퍼 높이(=48px) */
+  padding: 0;
+  border: 0;
+  background: transparent;
+  vertical-align: middle;
+}
+
+/* 아바타는 40×40 그대로, 원형/크롭 유지 */
+.auth-buttons .header-user .avatar {
+  width: 40px;
+  height: 40px;
+  display: block;             /* baseline 영향 제거 */
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: center;
+}

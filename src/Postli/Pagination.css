@@ -1,0 +1,36 @@
+
+/* 페이지네이션 섹션 스타일. */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin-top: 2rem;
+}
+
+.pagination button {
+  background-color: #ffffff;
+  border: 1px solid #ccc;
+  color: #333;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.pagination button:hover {
+  background-color: #f0f0f0;
+}
+
+/* 현재 페이지 버튼 스타일. */
+.pagination button.active {
+  background-color: #007bff;
+  color: white;
+  border-color: #007bff;
+}
+
+/* 비활성화된 버튼 스타일. */
+.pagination button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}

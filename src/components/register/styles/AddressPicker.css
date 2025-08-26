@@ -1,0 +1,37 @@
+/* 입력과 버튼을 하나의 그룹처럼 붙이기 */
+.form-row.address-picker .field-input {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.form-row.address-picker .field-btn {
+  height: 44px;                 /* 입력 높이와 동일 */
+  border-left: 0;               /* 경계선 이중 표시 제거 */
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  padding: 0 14px;
+}
+
+/* 읽기전용 인풋 톤 다운 */
+.field-input[readonly] {
+  background: #f9fafb;
+  color: #6b7280;               /* text-gray-500 정도 */
+  cursor: default;
+}
+
+/* 포커스 시 버튼 테두리도 같이 강조 */
+.form-row.address-picker .field-line:has(.field-input:focus) .field-btn {
+  border-color: #10b981;
+}
+
+/* 로딩/비활성 느낌 보강 */
+.form-row.address-picker .field-btn:disabled {
+  opacity: .8;
+  cursor: wait;
+}
+
+/* 반응형: 작은 화면에서 버튼 패딩 살짝 줄이기 */
+@media (max-width: 420px) {
+  .form-row.address-picker .field-btn {
+    padding: 0 10px;
+  }
+}

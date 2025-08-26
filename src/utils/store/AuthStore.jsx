@@ -8,8 +8,8 @@ export const useAuthStore = create(
       userInfo: null, // { token, memberNo, roleNumber, expires(ms) }
 
       // 서버 DTO 그대로 주입 (권장)
-      setSession: ({ token, memberNo, roleNumber, expires }) =>
-        set({ userInfo: { token, memberNo, roleNumber, expires } }),
+      setSession: ({ token, memberNo, roleLevel, expires }) =>
+        set({ userInfo: { token, memberNo, roleLevel, expires } }),
 
       logout: () => {
         set({ userInfo: null });

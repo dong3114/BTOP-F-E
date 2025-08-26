@@ -1,142 +1,248 @@
+//JJ
 import React, { useEffect, useRef, useState } from "react";
 import MicButton from "./mic/MicButton";
-import "../app/styles/mic.css"; // 파동/UI 스타일
+import "../app/styles/mic.css";
 
 export default function MicStreamer() {
   const [listening, setListening] = useState(false);
-  const [partial, setPartial]   = useState("");
-  const [finals, setFinals]     = useState([]);
+  // 최종 누적 [{ stt?: string, standard?: string, t: number }]
+  const [finals, setFinals] = useState([]);
 
-  // 리소스 핸들
-  const streamRef = useRef(null);
-  const recRef    = useRef(null);
-  const wsRef     = useRef(null);
+  // 핸들
+  const streamRef   = useRef(null);
+  const wsRef       = useRef(null);
 
-  // MIME 협상 (크로스브라우저)
-  const pickMime = () => {
-    const cands = [
-      "audio/webm;codecs=opus",
-      "audio/webm",
-      "audio/ogg;codecs=opus",
-    ];
-    for (const m of cands) {
-      if (window.MediaRecorder && MediaRecorder.isTypeSupported(m)) return m;
+  // PCM(WebAudio) 핸들
+  const audioCtxRef = useRef(null);
+  const sourceRef   = useRef(null);
+  const procRef     = useRef(null);
+
+  // 최종 도착 대기
+  const awaitingFinalRef = useRef(false);
+  const finalTimerRef    = useRef(null);
+
+  // ------------ 서버 메시지 처리 ------------
+  const handleWsMessage = (ev) => {
+    try {
+      const msg = JSON.parse(ev.data);
+
+      if (msg.info)  console.log("[WS] info:", msg.info);
+      if (msg.error) console.error("[WS] error:", msg.error);
+
+      // 최종 결과만 반영
+      if (msg.final !== undefined) {
+        if (typeof msg.final === "string") {
+          // 문자열이면 표준어만 온다고 가정
+          setFinals((prev) => [...prev, { standard: String(msg.final), t: Date.now() }]);
+        } else if (msg.final && typeof msg.final === "object") {
+          // 다양한 키 대응: stt/raw/text/original → 원문, standard/norm/normalized → 표준어
+          const raw =
+            msg.final.stt ??
+            msg.final.raw ??
+            msg.final.text ??
+            msg.final.original ??
+            undefined;
+
+          const standard =
+            msg.final.standard ??
+            msg.final.norm ??
+            msg.final.normalized ??
+            undefined;
+
+          setFinals((prev) => [...prev, { stt: raw, standard, t: Date.now() }]);
+        }
+
+        // 최종 수신되면 WS 닫기
+        awaitingFinalRef.current = false;
+        if (finalTimerRef.current) {
+          clearTimeout(finalTimerRef.current);
+          finalTimerRef.current = null;
+        }
+        setTimeout(() => {
+          if (wsRef.current) {
+            try { wsRef.current.close(); } catch {}
+            wsRef.current = null;
+          }
+        }, 300);
+      }
+      // partial은 UI에서 표시하지 않으므로 무시
+    } catch {
+      // 바이너리/파싱 실패는 무시
     }
-    return ""; // 브라우저 미지원
   };
 
-  const connectWS = () => {
+  // ------------ WS 연결(PCM 16k 모드 고정) ------------
+  const openWs = (onOpen) => {
     const host  = process.env.REACT_APP_WS_HOST || "localhost:8090";
     const proto = window.location.protocol === "https:" ? "wss" : "ws";
-    const ws    = new WebSocket(`${proto}://${host}/ws/stt`);
+    const ws    = new WebSocket(`${proto}://${host}/ws/stt?pcm=16000`);
     ws.binaryType = "arraybuffer";
 
-    ws.onopen = () => console.log("[WS] open");
-    ws.onclose = (e) => console.log("[WS] close", e.code, e.reason);
-    ws.onerror = (e) => console.error("[WS] error", e);
-
-    ws.onmessage = (ev) => {
-      try {
-        const msg = JSON.parse(ev.data);
-        if (msg.partial) setPartial(String(msg.partial));
-        if (msg.final)   setFinals((prev) => [...prev, String(msg.final)]);
-        if (msg.error)   console.error("[WS] error:", msg.error);
-      } catch {
-        // 텍스트 이외(바이너리)는 무시
-      }
-    };
+    ws.onopen    = () => { console.log("[WS] open"); onOpen && onOpen(); };
+    ws.onmessage = handleWsMessage;
+    ws.onclose   = (e) => console.log("[WS] close", e.code, e.reason || "");
+    ws.onerror   = (e) => console.error("[WS] error", e);
 
     wsRef.current = ws;
   };
 
-  const start = async () => {
-    if (listening) return;
-    const mimeType = pickMime();
-    if (!mimeType) {
-      alert("이 브라우저는 MediaRecorder(웹m/opus)를 지원하지 않습니다. Chrome/Edge 최신 버전을 사용하세요.");
-      return;
+  // ------------ 다운샘플링/형변환 ------------
+  const resampleTo16k = (input, inRate) => {
+    const outRate = 16000;
+    if (inRate === outRate) return input.slice();
+
+    if (inRate === 48000) {
+      // 3:1 간단 decimate (중간 샘플)
+      const outLen = Math.floor(input.length / 3);
+      const out = new Float32Array(outLen);
+      let j = 0;
+      for (let i = 0; i + 2 < input.length; i += 3) {
+        out[j++] = input[i + 1];
+      }
+      return out;
     }
 
+    // 일반 레이트: 선형보간(간이)
+    const ratio = inRate / outRate;
+    const outLen = Math.floor(input.length / ratio);
+    const out = new Float32Array(outLen);
+    for (let i = 0; i < outLen; i++) {
+      const srcPos = i * ratio;
+      const i0 = Math.floor(srcPos);
+      const i1 = Math.min(i0 + 1, input.length - 1);
+      const t = srcPos - i0;
+      out[i] = (1 - t) * input[i0] + t * input[i1];
+    }
+    return out;
+  };
+
+  const floatToInt16 = (float32Array) => {
+    const out = new Int16Array(float32Array.length);
+    for (let i = 0; i < float32Array.length; i++) {
+      let s = Math.max(-1, Math.min(1, float32Array[i]));
+      out[i] = s < 0 ? (s * 0x8000) : (s * 0x7fff);
+    }
+    return out;
+  };
+
+  // ------------ 시작(16k PCM로 전송) ------------
+  const start = async () => {
+    if (listening) return;
+
     try {
-      // 1) 마이크 권한/스트림
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       streamRef.current = stream;
 
-      // 2) WS 연결
-      connectWS();
+      openWs(() => {
+        const ac = new (window.AudioContext || window.webkitAudioContext)();
+        audioCtxRef.current = ac;
 
-      // 3) 녹음기 생성 및 청크 전송
-      const rec = new MediaRecorder(stream, { mimeType });
-      rec.ondataavailable = async (e) => {
-        if (!wsRef.current || wsRef.current.readyState !== WebSocket.OPEN) return;
-        // Blob -> ArrayBuffer -> 전송
-        const buf = await e.data.arrayBuffer();
-        wsRef.current.send(buf);
-      };
-      rec.onstart = () => console.log("[REC] start", mimeType);
-      rec.onstop  = () => console.log("[REC] stop");
+        const src = ac.createMediaStreamSource(stream);
+        sourceRef.current = src;
 
-      // 250ms 타임슬라이스로 청크 전송
-      rec.start(250);
-      recRef.current = rec;
+        // 2048 샘플 버퍼 → 약 4096바이트 (8KB 제한 여유)
+        const bufferSize = 2048;
+        const proc = ac.createScriptProcessor(bufferSize, 1, 1);
+        procRef.current = proc;
 
-      // UI 상태
-      setPartial("");
-      setListening(true);
+        proc.onaudioprocess = (e) => {
+          const ws = wsRef.current;
+          if (!ws || ws.readyState !== WebSocket.OPEN) return;
+
+          const ch0 = e.inputBuffer.getChannelData(0);
+          const ds  = resampleTo16k(ch0, ac.sampleRate);
+          const i16 = floatToInt16(ds);
+          ws.send(i16.buffer);
+        };
+
+        src.connect(proc);
+        proc.connect(ac.destination); // 일부 브라우저는 그래프 연결 필요
+
+        setListening(true);
+        awaitingFinalRef.current = false;
+        console.log("[REC-PCM] start", `${ac.sampleRate}Hz → 16000Hz Int16`);
+      });
     } catch (err) {
       console.error("마이크 시작 실패:", err);
       setListening(false);
     }
   };
 
+  // ------------ 정지/정리 ------------
   const stop = () => {
     if (!listening) return;
 
-    // 서버에 최종화 신호
-    if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
-      wsRef.current.send("stop");
-    }
+    // 오디오 그래프/마이크 먼저 정리(더 이상 전송 안 함)
+    try {
+      if (procRef.current) {
+        procRef.current.disconnect();
+        procRef.current.onaudioprocess = null;
+      }
+      if (sourceRef.current) sourceRef.current.disconnect();
+      if (audioCtxRef.current) audioCtxRef.current.close();
+    } catch {}
+    procRef.current = null;
+    sourceRef.current = null;
+    audioCtxRef.current = null;
 
-    // 녹음 중지
-    if (recRef.current && recRef.current.state !== "inactive") recRef.current.stop();
     if (streamRef.current) {
       streamRef.current.getTracks().forEach((t) => t.stop());
       streamRef.current = null;
     }
 
-    // WS 닫기(약간 대기 후)
-    if (wsRef.current) {
-      const ws = wsRef.current;
-      wsRef.current = null;
-      setTimeout(() => { try { ws.close(); } catch {} }, 300);
-    }
+    // WS는 final 수신까지 열어둠
+    try {
+      if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
+        awaitingFinalRef.current = true;
+        wsRef.current.send("stop"); // 서버에 최종화 지시
+
+        // 안전 타임아웃(예: 12초)
+        finalTimerRef.current = setTimeout(() => {
+          if (awaitingFinalRef.current) {
+            console.warn("[WS] final timeout → force close");
+            try { wsRef.current?.close(); } catch {}
+            wsRef.current = null;
+            awaitingFinalRef.current = false;
+          }
+        }, 12000);
+      }
+    } catch {}
 
     setListening(false);
   };
 
   const onToggle = () => (listening ? stop() : start());
 
-  // 언마운트 정리
-  useEffect(() => () => stop(), []); // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => () => {
+    // 언마운트 시 정리
+    try { if (procRef.current) { procRef.current.disconnect(); procRef.current.onaudioprocess = null; } } catch {}
+    try { sourceRef.current?.disconnect(); } catch {}
+    try { audioCtxRef.current?.close(); } catch {}
+    if (streamRef.current) { streamRef.current.getTracks().forEach((t) => t.stop()); streamRef.current = null; }
+    try { wsRef.current?.close(); } catch {}
+    if (finalTimerRef.current) clearTimeout(finalTimerRef.current);
+  }, []);
 
   return (
-  <div className="mic-page"> {/* 가운데 정렬 레이아웃 */}
-    <MicButton listening={listening} onToggle={onToggle} />
-    <div className="mic-status">
-      {listening ? "듣는 중..." : "대기 중 (버튼을 눌러 시작)"}
-    </div>
-    <div className="transcript">
-      <div><strong> </strong> {partial}</div>
-      {finals.length > 0 && (
-        <div style={{ marginTop: 8 }}>
-          <strong>Final:</strong>
-          {finals.map((t, i) => (
-            <div key={i} className="final-item">• {t}</div>
-          ))}
-        </div>
-      )}
-    </div>
-  </div>
-);
+    <div className="mic-page">
+      <MicButton listening={listening} onToggle={onToggle} />
 
+      <div className="mic-columns">
+        <div className="col">
+          <div className="col-title">최종 결과</div>
+          <div className="list">
+            {finals.map((row, i) => (
+              <div className="list-item" key={row.t ?? i}>
+                <div className="label">원문</div>
+                <div className="value">{row.stt ?? <span className="muted">—</span>}</div>
+                <div className="label" style={{marginTop: 6}}>표준어</div>
+                <div className="value">{row.standard ?? <span className="muted">—</span>}</div>
+              </div>
+            ))}
+            {finals.length === 0 && <div className="empty">아직 결과가 없습니다</div>}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 }

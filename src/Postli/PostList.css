@@ -1,0 +1,163 @@
+/* PostList.css */
+
+/* 게시판 제목과 검색창을 정렬하는 Flexbox 설정 */
+.list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.list-header h2 {
+  text-align: left;
+  font-size: 1.8rem;
+  color: #333;
+  margin-bottom: 0;
+  border-left: 4px solid #00a400;
+  padding-left: 10px;
+}
+
+/* 검색창 스타일 (SearchBar 컴포넌트) */
+.search-container {
+  display: flex;
+  gap: 10px;
+}
+
+.search-category {
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 1rem;
+  background-color: #fff;
+  cursor: pointer;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.search-category:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+.search-input {
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 1rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.search-input::placeholder {
+  color: #aaa;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+.no-results {
+  text-align: center;
+  padding: 2rem;
+  color: #999;
+}
+
+/* 테이블 스타일 (PostTable 컴포넌트) */
+.list-table {
+  width: 100%;
+  border-collapse: collapse;
+  border-spacing: 0;
+  margin-top: 1.5rem;
+}
+
+.list-table th, .list-table td {
+  padding: 12px;
+  text-align: center;
+  border-bottom: 1px solid #e9ecef;
+}
+
+/* 테이블 헤더 스타일. */
+.list-table thead th {
+  background-color: #f8f9fa;
+  color: #495057;
+  font-weight: bold;
+}
+
+/* 테이블 행 호버 효과. */
+.list-table tbody tr:hover {
+  background-color: #e9ecef;
+  cursor: pointer;
+}
+
+/* 제목 링크 스타일 수정 */
+.list-table a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.list-table a:hover {
+  text-decoration: underline;
+}
+
+/* 테이블 셀 너비 설정. */
+.list-table th:nth-child(1), .list-table td:nth-child(1) { width: 10%; }
+.list-table th:nth-child(2), .list-table td:nth-child(2) { width: 40%; text-align: left; color: #000; }
+.list-table th:nth-child(3), .list-table td:nth-child(3) { width: 20%; }
+.list-table th:nth-child(4), .list-table td:nth-child(4) { width: 20%; }
+.list-table th:nth-child(5), .list-table td:nth-child(5) { width: 10%; }
+
+/* 삭제 버튼 스타일. */
+.list-table button {
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  padding: 0.3rem 0.6rem;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.list-table button:hover {
+  background-color: #5a6268;
+}
+
+/* 페이지네이션 섹션 스타일 (Pagination 컴포넌트) */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin-top: 2rem;
+}
+
+.pagination button {
+  background-color: #ffffff;
+  border: 1px solid #ccc;
+  color: #333;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.pagination button:hover {
+  background-color: #f0f0f0;
+}
+
+.pagination button.active {
+  background-color: #007bff;
+  color: white;
+  border-color: #007bff;
+}
+
+.pagination button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.width{
+  width: 80%;
+  margin: 40px auto;     
+  padding: 0 20px;
+}

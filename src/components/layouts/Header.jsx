@@ -1,56 +1,87 @@
 // src/components/MainHeader.jsx
-import { Link, NavLink } from "react-router-dom";
-import "./MainHeader.css";
-import { useAuthStore } from "../../utils/store/AuthStore";
-import { useNavigate } from 'react-router-dom'
-import { Auth } from "../../utils/api/MemberAPI";
 import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuthStore } from "../../utils/store/AuthStore";
+import { Auth } from "../../utils/api/MemberAPI";
 import LoginModal from "../modals/login/LoginModal";
+import ProfileDropdown from "../dropdowns/DropdownMenu";
+import "./styles/Header.css";
 
-export default function MainHeader() {
-  const [open, setOpen] = useState(false);
+export default function Header({ title }) {
+  const [openLogin, setOpenLogin] = useState(false);
+  const [openProfile, setOpenProfile] = useState(false);
   const userInfo = useAuthStore((s) => s.userInfo);
-  const isAuthed = !!userInfo?.token;               // 또는 !!userInfo?.memberNo
+  const isAuthed = !!userInfo?.token; // 또는 !!userInfo?.memberNo
   const navigate = useNavigate();
 
   const handleLogout = () =>
-    Auth.Logout().then(() => navigate("/")).catch(() => {});
+    Auth.Logout()
+      .then(() => {
+        alert("로그아웃 되었습니다.");
+        navigate("/");
+      })
+      .catch(() => {});
 
   return (
-    <header className="header-bar">
-      <div className="header-inner">
-        {/* 왼쪽: 로고 */}
-        <div className="nav-left">
-          <Link to="/" className="logo" aria-label="홈으로 이동">
-            BTOP로고
+    <header className="header">
+      <div className="header-left">
+        <div className="header-title-container">
+          <Link to="/">
+            <img
+              src="/logo_re.jpg"
+              alt="마스코트"
+              style={{ width: 72, height: 72, objectFit: "contain", borderRadius: 8 }}
+            />
           </Link>
         </div>
+        <nav className="nav">
+          <Link to="/post" className="nav-link">자유 게시판</Link>
+          <Link to="/notice" className="nav-link">공지사항</Link>
+        </nav>
+      </div>
 
-        {/* 오른쪽: 네비게이션 */}
-        <nav className="nav-right" aria-label="Primary">
-          <NavLink to="/posts" className="nav-item">게시판</NavLink>
-          <NavLink to="/notices" className="nav-item">공지사항</NavLink>
+      <div className="auth-buttons">
+        {isAuthed ? (
+          <>
+            {/*  앵커 래퍼: 이 요소의 '오른쪽 끝'을 기준으로 드롭다운이 뜸 */}
+            <div className="header-actions">
+              <button
+                type="button"
+                className="profile-trigger"
+                onClick={() => setOpenProfile(v => !v)}
+                aria-label="프로필 열기"
+                style={{ border: "none", background: "transparent", cursor: "pointer", padding: 0 }}
+              >
+                <img
+                  src={userInfo?.profileImageUrl || "/default_user.png"}
+                  alt="프로필"
+                  className="avatar avatar--sm"
+                  width={40}
+                  height={40}
+                />
+              </button>
 
-          {isAuthed ? (
-            <>
-              {/* 프로필/마이페이지 링크 */}
-              <NavLink to={`/members/${userInfo.memberNo}`} className="nav-item">
-                내 프로필
-              </NavLink>
-              {/* 로그아웃은 링크가 아니라 버튼 */}
-              <button type="button" className="nav-item nav-cta" onClick={handleLogout}>
+              <button className="auth-button logout" onClick={handleLogout}>
                 로그아웃
               </button>
-            </>
-          ) : (
-            <button className="nav-item nav-cta" onClick={() => setOpen(true)}>
+
+              <ProfileDropdown
+                isOpen={openProfile}
+                onClose={() => setOpenProfile(false)}
+              />
+            </div>
+          </>
+        ) : (
+          <>
+            <button className="auth-button login" onClick={() => setOpenLogin(true)}>
               로그인
             </button>
-          )}
-        </nav>
-        <LoginModal open={open} onClose={() => setOpen(false)} />
+            <button className="auth-button signup" onClick={() => navigate("/member/register")}>회원가입</button>
+          </>
+        )}
       </div>
-      <hr />
+
+      <LoginModal open={openLogin} onClose={() => setOpenLogin(false)} />
     </header>
   );
 }

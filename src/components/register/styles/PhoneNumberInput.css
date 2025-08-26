@@ -1,0 +1,28 @@
+.form-row {
+  margin-bottom: 16px;
+}
+
+.form-label {
+  margin: 0 0 8px 0;
+  font-size: 14px;
+  color: #374151;
+}
+
+.email-line {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.email-local {
+  flex: 1 1 auto;
+}
+
+.email-domain-select {
+  flex: 0 0 180px;
+}
+
+.at {
+  opacity: 0.7;
+  user-select: none;
+}
