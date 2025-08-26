@@ -1,11 +1,25 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import '../styles/AdminNav.css'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import logowhite from '../../../img/admin/logo_white.png'
+import { useAuthStore } from '../../../utils/store/AuthStore';
 
 function AdminNav() {
+  const userInfo = useAuthStore((s) => s.userInfo);
+  const isAuthed = !!userInfo?.token; 
+  const roleLevel = userInfo?.roleLevel;
+  const navigate = useNavigate();
 
     const [activeIndex, setActiveIndex] = useState(0);
+
+    useEffect(() => {
+           console.log(roleLevel)
+      if(!isAuthed){
+        navigate("/admin")
+      }
+  }, []);
+
+
 
   // 메뉴 배열
   const menuItems = [

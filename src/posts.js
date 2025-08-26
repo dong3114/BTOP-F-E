@@ -1,3 +1,5 @@
+import BTOPAPI from "./utils/api/BasicAPI";
+
 const posts = [
   { id: 1, title: '첫 번째 게시글', author: '작성자1', date: '2024-05-15', content: '첫 번째 게시글 내용입니다. 재미있는 이야기를 들려드릴게요.', views: 125 },
   { id: 2, title: '두 번째 게시글', author: '작성자2', date: '2024-05-16', content: '두 번째 게시글 내용입니다. React에 대해 더 알아보고 싶어요.', views: 88 },
@@ -24,6 +26,20 @@ const posts = [
   { id: 23, title: '스물세 번째 게시글', author: '작성자23', date: '2024-06-06', content: '스물세 번째 게시글입니다. 즐거운 주말 보내세요.', views: 115 },
   { id: 24, title: '스물네 번째 게시글', author: '작성자24', date: '2024-06-07', content: '스물네 번째 게시글입니다. 궁금한 점이 있으면 무엇이든 물어보세요.', views: 256 }
 ];
+
+export const Board = {
+  AllBoardList: async() => {
+    try {
+      const response = await BTOPAPI.get("/api/board/all");
+      console.log("API 호출 성공:", response.data);
+      return response.data;
+    }
+    catch (error) {
+      console.error("API 호출 실패: ", error);
+      throw error;
+    }
+  }
+}
 
 // 임시 확인용 데이터
 export default posts;

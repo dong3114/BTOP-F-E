@@ -5,6 +5,10 @@
     display:flex;
 }
 
+#searchText:focus{
+    outline:none;
+}
+
 .content{
     padding-left: 40px;
     padding-right: 40px;
@@ -34,8 +38,6 @@
     height: 40px;
     width: 500px;
     border: 1px solid rgb(228, 228, 228);
-    
-    
 }
 
 .tablebox{
@@ -56,7 +58,129 @@
     width: 440px;
 }
 
-.tablebox th, td{
+.tablebox th, .tablebox td{
     height: 50px;
     border-bottom: 1px solid rgb(228, 228, 228);
+}
+
+.boardTitle{
+    padding-left: 15px;
+    margin: 30px 40px 0px 40px;
+    height: 105px;
+    /* width: 100%; */
+    border-top: 2px solid #03c75a;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.boardTitle span{
+    font-weight: bold;
+}
+
+.boardTitle > div > span{
+    font-size: 18px;
+}
+
+.boardTitle span{
+    margin-right: 10px;
+    margin-left: 10px;
+
+}
+
+.boardTitle p{
+    margin-right: 10px;
+}
+
+.boardTitle li{
+    border-right: 1px solid rgb(228, 228, 228);
+    display: flex;
+    float: left;
+}
+
+.boardTitle ul{
+    padding: 0px;
+}
+
+li {
+    list-style: none;
+}
+
+.boardContext{
+    height: 100%;
+    margin: 0px 40px;
+    border-top: 1px solid #03c75a;
+
+}
+
+.context{
+    padding: 20px;
+    border-bottom: 2px solid #03c75a;
+}
+
+.btnBoardList{
+    margin-top: 40px;
+    display: flex;
+    justify-content: center;
+}
+
+.btnBoardList button{
+    width: 80px;
+    height: 40px;
+    border: 0px;
+    cursor: pointer;
+    background-color: #03c75a;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+#boardList:hover{
+    background-color: #17b75e;
+}
+
+.userInfo{
+    padding-left: 15px;
+    margin: 30px 40px 0px 40px;
+    height: 100%;
+    /* width: 100%; */
+    border-top: 2px solid #03c75a;
+    padding: 0px 20px;
+}
+
+.userInfo table{
+
+    text-align: center;
+    width: 100%;
+    table-layout: fixed;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.userInfo td{
+    height: 60px;
+    border-bottom: 1px solid #03c75a;
+    padding: 10px;
+}
+
+.userInfo th{
+    padding-left: 40px;
+    height: 60px;
+    border-bottom: 1px solid #03c75a;
+}
+
+.userInfo input{
+    width: 100%;
+    height: 100%;
+    border: 1px solid rgb(228, 228, 228);
+    padding-left: 10px;
+}
+
+.userInfo input:focus{
+    outline: none;
+}
+
+.userInfo span{
+    padding-left: 10px;
+    font-weight: bold;
 }

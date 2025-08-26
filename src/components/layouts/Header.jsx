@@ -43,6 +43,7 @@ export default function Header({ title }) {
       <div className="auth-buttons">
         {isAuthed ? (
           <>
+            {/*  앵커 래퍼: 이 요소의 '오른쪽 끝'을 기준으로 드롭다운이 뜸 */}
             <div className="header-actions">
               <button
                 type="button"

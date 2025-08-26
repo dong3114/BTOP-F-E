@@ -63,3 +63,15 @@
   padding: 2rem;
   color: #999;
 }
+
+/* 기본 링크 스타일: 밑줄 제거 및 색상 상속 */
+.post-link-cell {
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+}
+
+/* 마우스를 올렸을 때만 밑줄을 추가 */
+.post-link-cell:hover {
+  text-decoration: underline;
+}

@@ -13,6 +13,8 @@ const loginResponse = (data) => ({
  * 수정 일자: 2025.08.22 한동환
  * 수정 내용: Login 예외 처리 (401 권한 에러 처리)
  */
+
+
 export const Auth = {
   Login: (payload) => {
     return BTOPAPI.post("/api/member/login", payload)
@@ -32,7 +34,7 @@ export const Auth = {
     return Promise.resolve(true);
   },
   AdminLogin: (payload) => {
-    return BTOPAPI.post("/api/admin", payload)
+    return BTOPAPI.post("/api/admin/login", payload)
       .then(({ data }) => {
         console.log("API_URL =", process.env.REACT_APP_API_URL);
         const login = loginResponse(data);
