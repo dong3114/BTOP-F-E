@@ -35,8 +35,8 @@ export default function Header({ title }) {
           </Link>
         </div>
         <nav className="nav">
-          <Link to="/post" className="nav-link">자유 게시판</Link>
-          <Link to="/notice" className="nav-link">공지사항</Link>
+          <Link to="/post" className="nav-link">공지사항</Link>
+          {/* <Link to="/notice" className="nav-link">공지사항</Link> */}
         </nav>
       </div>
 
