@@ -13,7 +13,8 @@ function SearchBar({ searchTerm, setSearchTerm, searchCategory, setSearchCategor
 
     return (
         <div className="list-header">
-            <h2>자유 게시판</h2>
+            {/* <h2>자유 게시판</h2> */}
+            <h2>공지사항</h2>
             <div className="search-container">
                 <select value={searchCategory} onChange={handleCategoryChange} className="search-category">
                     <option value="title">제목</option>

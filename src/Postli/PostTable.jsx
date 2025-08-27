@@ -2,6 +2,8 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 function PostTable({ currentPosts, onPostClick }) {
+    console.log("dsfdsfsdffdfddf",currentPosts);
+    
     return (
         <table className='list-table'>
             <thead>
@@ -16,15 +18,15 @@ function PostTable({ currentPosts, onPostClick }) {
             <tbody>
                 {currentPosts.length > 0 ? (
                     currentPosts.map((post) => (
-                        <tr key={post.id} >
-                            <td>{post.id}</td>
-                            <td className="post-link-cell" onClick={() => onPostClick(post.id)}>
-                                <Link to={`/post/${post.id}`} className="post-link">
-                                {post.title}
+                        <tr key={post.boardNo} >
+                            <td>{post.boardNo}</td>
+                            <td className="post-link-cell" onClick={() => onPostClick(post.boardNo)}>
+                                <Link to={`/post/${post.boardNo}`} className="post-link">
+                                {post.boardTitle}
                                 </Link>
                             </td>
-                            <td>{post.author}</td>
-                            <td>{post.date}</td>
+                            <td>{post.memberNo}</td>
+                            <td>{post.createdAt}</td>
                             <td>{post.views}</td>
                         </tr>
                     ))
